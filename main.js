@@ -92,7 +92,7 @@ d3.json("data/ct_state_boundary.geojson", function(bdata){
             var gnis = feature.properties.GNISID
             var abmrpt = getRpt(site, abmrptComIds, "ABM")
             var volrpt = getRpt(site, volrptComIds, "VOL")
-            marker.bindPopup('<b>Lake: </b>'+ name+'</br>' + "<b>SID: </b>"+ site + '</br>' + 
+            marker.bindPopup('<b>Lake: </b>'+ name+'</br>' + "<b>Lake Reports: </b>" + '</br>' + 
               abmrpt + '</br>' + volrpt + '</br>');
             marker.on('click', function(){
               d3.select('#plt').html('');
@@ -105,7 +105,7 @@ d3.json("data/ct_state_boundary.geojson", function(bdata){
 
         
         L.geoJson(bdata,{style:{"color": "black", "weight": 2}}).addTo(map);
-
+        //no comment?
       
     });
     });
@@ -180,7 +180,7 @@ function addDataPlt(data, site, name, plt, devL, devH, abmrpt, volrpt){
     var mouseover = function(d) {
             tooltip.style("opacity", 1)
             d3.select(this)
-            .style("stroke", "black")
+            .style("stroke", "#FDB515")
             .style("opacity", 1)
     }
 
@@ -193,8 +193,8 @@ function addDataPlt(data, site, name, plt, devL, devH, abmrpt, volrpt){
     var mouseout = function(d) {
             tooltip.style("opacity", 0)
             d3.select(this)
-            .style("stroke", "none")
-            .style("opacity", 0.8)
+            .style("stroke", "#0D2D6C")
+            .style("opacity", 1)
     }
 
     //add bars to plot with tooltip
@@ -206,7 +206,7 @@ function addDataPlt(data, site, name, plt, devL, devH, abmrpt, volrpt){
           .attr("y", function(d) { return y(d.lc); })
           .attr("width", function(d) { return x(d.pct); })
           .attr("height", y.bandwidth() )
-          .attr("fill", "#69b3a2")
+          .attr("fill", "#00AAE7")
         .on("mouseover", mouseover)
         .on("mousemove", mousemove)
         .on("mouseout", mouseout)   

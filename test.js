@@ -47,7 +47,7 @@ d3.csv("data/lake_shoreline_lc_statewide.csv", function(data) {
     var mouseover = function(d) {
             tooltip.style("opacity", 1)
             d3.select(this)
-            .style("stroke", "black")
+            .style("stroke", "#FDB515")
             .style("opacity", 1)
     }
 
@@ -60,7 +60,7 @@ d3.csv("data/lake_shoreline_lc_statewide.csv", function(data) {
     var mouseout = function(d) {
             tooltip.style("opacity", 0)
             d3.select(this)
-            .style("stroke", "none")
+            .style("stroke", "#0D2D6C")
             .style("opacity", 0.8)
     }
 
@@ -73,7 +73,7 @@ d3.csv("data/lake_shoreline_lc_statewide.csv", function(data) {
         .attr("y", function(d) { return y(d.lc); })
         .attr("width", function(d) { return x(d.pct); })
         .attr("height", y.bandwidth() )
-        .attr("fill", "#69b3a2")
+        .attr("fill", "#00AAE7")
         .on("mouseover", mouseover)
         .on("mousemove", mousemove)
         .on("mouseout", mouseout)

@@ -77,11 +77,7 @@ a :hover {
 }
 
 svg {
-    stroke:#0D2D6C;
-}
-
-rect {
-   fill: #00AAE7;
+    stroke: #0D2D6C;
 }
 
 /* css to customize Leaflet default styles  */
@@ -156,4 +152,23 @@ rect {
     margin-top: 1px;
     background-color: #d3d3d3;
     border: 1px solid #0D2D6C;
+  }
+
+  @media only screen and (max-width: 1000px){
+    #title_span {
+        position: fixed;
+        left: 2vw;
+        font-size: x-large;
+        padding: 1px;
+        display: block;
+        margin: auto;
+    }
+    
+    #logo_span{
+        float: right;
+        right: 1vw;
+        padding: 5px;
+        display: block;
+        margin: auto;
+    }
   }
