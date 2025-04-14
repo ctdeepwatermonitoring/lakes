@@ -44,20 +44,64 @@
             <h3 id = "lake-name">Connecticut Lakes</h3>
             <hr>
             <h5 id="subtitle">Click on a Lake for Available Information</h5>
-            <div id="dot1"></div><div class="legendTxt">One or more water quality reports available </div><br>
-            <div id="dot2"></div><div class="legendTxt">No reports available </div>
+            <div id="dot1"></div><div>One or more water quality reports available </div><br>
+            <div id="dot2"></div><div>No reports available </div>
             <hr>
             <h5 id="subtitle">Reports</h5>
             <div id = "abmRpt"> Click Lake to Find Available Lake Profile Reports </div>
             <div id = "volRpt"> Click Lake to Find Available CT Lake Watch Reports </div>
+            <a href="Citizens_Guide_Lake_Monitoring_2025_V041425.pdf" target="_blank">
+                A Citizen's Guide to Lake Monitoring
+            </a>
             <hr>
-            <h5 id="subtitle">Lake Shoreline Land Cover</h5>
-            <div id = "devLvl">Percent land cover of <b> all land area surrounding lake shorelines</b> in the State.  16.1% of lake shoreline area in the State is developed.</div>
+            <h5 id="subtitle">Lake Shoreline Land Cover 
+                <button class="btn btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#Modal">
+                    <img src="images/info-circle.svg" alt="Info" style="vertical-align: middle;">
+                </button>
+            </h5>
+            <div id = "devLvl">Percent land cover of <b> all land area surrounding lake shorelines</b> in the State.  
+                16.1% of lake shoreline area in the State is developed.  
+            </div>
             <div class="plot" id="plt"></div>
         </span>
      </div>
 
+     <!-- Modal -->
+     <div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="ModalLabel">Lake Shoreline Land Cover</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h5><u>Overview</u></h5>
+                    <p>Developed land on the surrounding lake shoreline can affect the water quality in a lake.  
+                        The most important aspect of maintaining a healthy lake is understanding the relationship 
+                        between the lake’s water quality and the surrounding land cover.  What happens on the 
+                        land will ultimately run off into the lake’s water.  Check out 
+                        <a href="Citizens_Guide_Lake_Monitoring_2025_V041425.pdf" target="_blank">
+                            'A Citizen's Guide to Lake Monitoring' 
+                        </a> 
+                        to find resources on how to implement best management practices 
+                        to mitigate runoff that degrades water quality and keep your lake healthy!
+                    </p>
+                    <hr>
+                    <h5><u>About the Data</u></h5>
+                    <p>Lake shoreline land cover was calculated by examining the land cover surrounding the lake
+                         within a 90 meters (~ 300 feet) buffer.  The 
+                         <a href="https://coast.noaa.gov/digitalcoast/data/ccaphighres.html" target="_blank">
+                            NOAA Coastal Change Analysis Program (C-CAP) 
+                            1-meter high resolution 2016 land cover dataset 
+                        </a> 
+                         was used to derive land cover percentages within the lake shoreline.
+                    </p>
+                    <img src="images/pataganset_lc16_buffer.png" class="img-fluid" alt="Pataganset Lake Land Cover">
+                </div>
+            </div>
+        </div>
+      </div>
+
     <script src="main.js"></script>
-    <script src="test.js"></script>
   </body>
 </html>

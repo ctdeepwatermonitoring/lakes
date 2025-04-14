@@ -88,73 +88,28 @@ svg {
     font-size: 1vw;
     font-family: 'Public Sans', sans-serif;;
 }
-
-.legend {
-    line-height: 18px;
-    color: #0D2D6C;
-    font-family: 'Public Sans', sans-serif;;
-    font-size: 0.9vw;
-    padding: 1% 10%;
-    background: #9ECF7C;
-    opacity: 100%;
-    box-shadow: 0 0 15px rgba(0,0,0,0.2);
-    border-radius: 5px;
-    width: 20vw;
-}
-
-.legend i {
-    width: 18px;
-    height: 18px;
-    float: left;
-    margin-right: 8px;
-    opacity: 1;
-}
-
-.legend p {
-    line-height: 20px;
-    margin: 0;
-}
-
-.legend .circle {
-    border-radius: 50%;
-    width: 15px;
-    height: 15px;
-    margin-top: 2px;
-    background-color: #FDB515;
-    border: 3px solid #0D2D6C;
-}
-
-.legend .title{
-    font-weight: bold;
-    font-family: 'Public Sans', sans-serif;;
-}
-
-.legendTxt {
-    padding-left: 10 em;
-    font-size: 1em;
-  }
   
-  #dot1 {
+#dot1 {
     border-radius: 50%;
     width: 15px;
     height: 15px;
     float: left;
-    margin-top: 2px;
+    padding: 0.5em;
     background-color: #FDB515;
     border: 2px solid #0D2D6C;
-  }
+}
   
-  #dot2 {
+#dot2 {
     border-radius: 50%;
     width: 15px;
     height: 15px;
     float: left;
-    margin-top: 1px;
+    padding: 0.5em;
     background-color: #d3d3d3;
-    border: 1px solid #0D2D6C;
-  }
+    border: 2px solid #0D2D6C;
+}
 
-  @media only screen and (max-width: 1000px){
+@media only screen and (max-width: 1000px){
     #title_span {
         position: fixed;
         left: 2vw;
@@ -171,4 +126,4 @@ svg {
         display: block;
         margin: auto;
     }
-  }
+}

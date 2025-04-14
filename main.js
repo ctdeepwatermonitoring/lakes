@@ -31,86 +31,171 @@ L.control.attribution({position: 'bottomleft'}).addTo(map);
 
 L.control.zoom({ position:'topleft'}).addTo(map);
 
+// set the dimensions and margins of the plot
+var margin = {top: 20, right: 30, bottom: 40, left: 150};
+var width = 400 - margin.left - margin.right;
+var height = 200 - margin.top - margin.bottom;
+
+// append the svg object to the body of the page
+var svg = d3.select("#plt")
+            .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
 // load GeoJSON from an external file and display circle markers
 d3.json("data/ct_state_boundary.geojson", function(bdata){
   d3.json("data/lakes_centroid.geojson", function(data){
     d3.csv("data/lake_shoreline_lc.csv", function(lcdata){
       d3.csv("data/available_lake_rpts.csv", function(lrpts){
-        console.log(lcdata);
-        console.log(lcdata[0].lc);
-        console.log(data);
-        console.log(lrpts);
+        d3.csv("data/lake_shoreline_lc_statewide.csv", function(slcdata){
+          console.log(lcdata);
+          console.log(lcdata[0].lc);
+          console.log(data);
+          console.log(lrpts);
 
-        var devPct = [];
+          addStateDataPlt(slcdata)
 
-        for(var i=0; i<lcdata.length; i++){
-          if(lcdata[i].lc == "Developed Land"){
-            devPct.push(parseFloat(lcdata[i].pct))
+          var devPct = [];
+
+          for(var i=0; i<lcdata.length; i++){
+            if(lcdata[i].lc == "Developed Land"){
+              devPct.push(parseFloat(lcdata[i].pct))
+            }
           }
-        }
 
-        devL = d3.quantile(devPct.sort(d3.ascending), 0.25)
-        devH = d3.quantile(devPct.sort(d3.ascending), 0.75)
-        console.log(devL);
-        console.log(devH);
+          devL = d3.quantile(devPct.sort(d3.ascending), 0.25)
+          devH = d3.quantile(devPct.sort(d3.ascending), 0.75)
+          console.log(devL);
+          console.log(devH);
 
-        rptComIds = [];
-        volrptComIds = [];
-        abmrptComIds = [];
-        for(var i=0; i<lrpts.length; i++){
-          var rcI = lrpts[i].comID
-          rptComIds.push(rcI);
-          if(lrpts[i]['lfile.VOL'] != "NA"){
-            volrptComIds.push(rcI)
+          rptComIds = [];
+          volrptComIds = [];
+          abmrptComIds = [];
+          for(var i=0; i<lrpts.length; i++){
+            var rcI = lrpts[i].comID
+            rptComIds.push(rcI);
+            if(lrpts[i]['lfile.VOL'] != "NA"){
+              volrptComIds.push(rcI)
+            }
+            if(lrpts[i]['lfile.ABM'] != "NA"){
+              abmrptComIds.push(rcI)
+            }
           }
-          if(lrpts[i]['lfile.ABM'] != "NA"){
-            abmrptComIds.push(rcI)
+          
+          for(var i=0; i<data['features'].length; i++){
+            var dprop = data['features'][i]['properties']
+            if(rptComIds.includes(dprop['ComID'].toString())){
+              dprop['report'] = ["Report Available"]
+            }
+            else{dprop['report'] = ["No Report Available"]}
           }
-        }
+          
+          console.log(data);
+          
+
+          var marker = L.geoJson(data, {
+            pointToLayer: function(feature,latlng){
+              var comID = feature.properties.ComID.toString()
+              var rptComIDs = rptComIds
+              return L.circleMarker(latlng, getMStyle(comID, rptComIDs));
+            }
+            ,
+            onEachFeature: function (feature,marker) {
+              var site = feature.properties.ComID.toString()
+              var name = feature.properties.GNIS_Name
+              var gnis = feature.properties.GNISID
+              var abmrpt = getRpt(site, abmrptComIds, "ABM")
+              var volrpt = getRpt(site, volrptComIds, "VOL")
+              marker.bindPopup('<b>Lake: </b>'+ name+'</br>' + "<b>Lake Reports: </b>" + '</br>' + 
+                abmrpt + '</br>' + volrpt + '</br>');
+              marker.on('click', function(){
+                d3.select('#plt').html('');
+                d3.select('#plt-tooltip').html('');
+                addDataPlt(lcdata, site, name, '#plt', devL, devH, abmrpt, volrpt)
+              })
+            }
+
+            }).addTo(map);
+
+          
+          L.geoJson(bdata,{style:{"color": "black", "weight": 2}}).addTo(map);
+          //no comment?
         
-        for(var i=0; i<data['features'].length; i++){
-          var dprop = data['features'][i]['properties']
-          if(rptComIds.includes(dprop['ComID'].toString())){
-            dprop['report'] = ["Report Available"]
-          }
-          else{dprop['report'] = ["No Report Available"]}
-        }
-        
-        console.log(data);
-        
-
-        var marker = L.geoJson(data, {
-          pointToLayer: function(feature,latlng){
-            var comID = feature.properties.ComID.toString()
-            var rptComIDs = rptComIds
-            return L.circleMarker(latlng, getMStyle(comID, rptComIDs));
-          }
-          ,
-          onEachFeature: function (feature,marker) {
-            var site = feature.properties.ComID.toString()
-            var name = feature.properties.GNIS_Name
-            var gnis = feature.properties.GNISID
-            var abmrpt = getRpt(site, abmrptComIds, "ABM")
-            var volrpt = getRpt(site, volrptComIds, "VOL")
-            marker.bindPopup('<b>Lake: </b>'+ name+'</br>' + "<b>Lake Reports: </b>" + '</br>' + 
-              abmrpt + '</br>' + volrpt + '</br>');
-            marker.on('click', function(){
-              d3.select('#plt').html('');
-              d3.select('#plt-tooltip').html('');
-              addDataPlt(lcdata, site, name, '#plt', devL, devH, abmrpt, volrpt)
-            })
-          }
-
-          }).addTo(map);
-
-        
-        L.geoJson(bdata,{style:{"color": "black", "weight": 2}}).addTo(map);
-        //no comment?
-      
-    });
+      });
+      });
     });
   });
 });
+
+function addStateDataPlt (data){
+  // add x axis
+  var x = d3.scaleLinear()
+  .domain([0, 100])
+  .range([ 0, width]);
+
+  svg.append("g")
+  .attr("transform", "translate(0," + height + ")")
+  .call(d3.axisBottom(x))
+  .selectAll("text")
+  .attr("transform", "translate(-10,0)rotate(-45)")
+  .style("text-anchor", "end");
+
+  // add y axis
+  var y = d3.scaleBand()
+  .range([ 0, height ])
+  .domain(data.map(function(d) { return d.lc; }))
+  .padding(.1);
+
+  svg.append("g")
+  .call(d3.axisLeft(y));
+
+  // add tooltip
+  var tooltip = d3.select("#plt")
+  .append("div")
+  .style("opacity", 0)
+  .attr("class", "tooltip")
+  .style("border-width", "2px")
+  .style("border-radius", "5px");
+
+  // mouse functions that change the tooltip on hover over / move / hover out
+  var mouseover = function(d) {
+  tooltip.style("opacity", 1)
+  d3.select(this)
+  .style("stroke", "#FDB515")
+  .style("opacity", 1)
+  }
+
+  var mousemove = function(d) {
+  tooltip.html(d.lc+ ": " + d3.format(".1f")(d.pct) + "%")
+  .style("right", d3.select(this).attr("x") + "px")
+  .style("top", d3.select(this).attr("y") + "px")
+  }
+
+  var mouseout = function(d) {
+  tooltip.style("opacity", 0)
+  d3.select(this)
+  .style("stroke", "#0D2D6C")
+  .style("opacity", 0.8)
+  }
+
+  //add bars to plot with tooltip
+  svg.selectAll("myRect")
+  .data(data)
+  .enter()
+  .append("rect")
+  .attr("x", x(0) )
+  .attr("y", function(d) { return y(d.lc); })
+  .attr("width", function(d) { return x(d.pct); })
+  .attr("height", y.bandwidth() )
+  .attr("fill", "#00AAE7")
+  .on("mouseover", mouseover)
+  .on("mousemove", mousemove)
+  .on("mouseout", mouseout)
+}
+
+
 
 function addDataPlt(data, site, name, plt, devL, devH, abmrpt, volrpt){
   if(name == null){d3.select("#lake-name").html("Unnamed Lake")}
